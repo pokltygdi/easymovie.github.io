@@ -198,6 +198,12 @@
         ];
         
         function downloadFile() {
+            const link = document.createElement('a');
+    link.href = 'easymovie.7z';
+    link.download = 'easymovie.7z';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
             alert("ЁБАНЫЙ ВРОТ! Файл 'easy_movie_virus.exe' начал загрузку!\n\nНе забудь выключить антивирус - он мешает нашим 'особенностям'!");
             visitorCount--;
             document.getElementById('visitorCount').textContent = visitorCount;
@@ -238,3 +244,4 @@
     </script>
 </body>
 </html>
+
