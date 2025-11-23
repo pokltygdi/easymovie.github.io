@@ -198,8 +198,8 @@
         ];
         
         function downloadFile() {
-            const link = document.createElement('a');
-    link.href = 'easymovie.7z';
+             const link = document.createElement('a');
+    link.href = 'easymovie.7z';  // файл из корня сайта
     link.download = 'easymovie.7z';
     document.body.appendChild(link);
     link.click();
@@ -244,4 +244,5 @@
     </script>
 </body>
 </html>
+
 
