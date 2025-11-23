@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy Movie - Хуёвый видеоредактор</title>
+    <style>
+        body {
+            background-color: #008080;
+            font-family: "Arial Black", Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #000;
+        }
+        
+        .container {
+            width: 800px;
+            margin: 0 auto;
+            background: #c0c0c0;
+            border: 3px outset;
+            padding: 10px;
+        }
+        
+        .header {
+            background: #000080;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            font-family: "Arial Black", Arial, sans-serif;
+        }
+        
+        .marquee {
+            background: #ffff00;
+            color: #ff0000;
+            padding: 8px;
+            font-weight: bold;
+            margin: 10px 0;
+            font-family: "Arial Black", Arial, sans-serif;
+        }
+        
+        .content {
+            padding: 15px;
+            line-height: 1.4;
+            font-family: Arial, sans-serif;
+        }
+        
+        .button {
+            background: #c0c0c0;
+            border: 2px outset;
+            padding: 8px 20px;
+            font-family: "Arial Black", Arial, sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+        }
+        
+        .button:hover {
+            background: #d0d0d0;
+        }
+        
+        .feature {
+            background: #fff;
+            border: 2px inset;
+            padding: 12px;
+            margin: 12px 0;
+        }
+        
+        .counter {
+            background: #000;
+            color: #0f0;
+            padding: 8px;
+            font-family: "Courier New", monospace;
+            text-align: center;
+            margin: 12px 0;
+            font-weight: bold;
+        }
+        
+        .blink {
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        
+        .under-construction {
+            background: #ff0000;
+            color: #ffff00;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            border: 2px dotted #000;
+            font-family: "Arial Black", Arial, sans-serif;
+        }
+        
+        h2 {
+            color: #000080;
+            margin-top: 0;
+            font-family: "Arial Black", Arial, sans-serif;
+        }
+        
+        ul, ol {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            [VIDEO] EASY MOVIE v1.0 - ОХУЕННЫЙ ВИДЕОРЕДАКТОР [VIDEO]
+        </div>
+        
+        <marquee class="marquee" behavior="scroll" direction="left">
+            !!! ВНИМАНИЕ! Эта программа может вызвать нервный срыв! !!!
+        </marquee>
+        
+        <div class="counter">
+            Посетителей, которые не выебались с программой: <span id="visitorCount">1337</span>
+        </div>
+        
+        <div class="content">
+            <div class="feature">
+                <h2>!!! Что это за хуйня?</h2>
+                <p>Easy Movie - это видеоредактор, который заставит тебя материться как сапожник! 
+                Проще говоря, это та еще хуйня, но иногда работает.</p>
+            </div>
+            
+            <div class="feature">
+                <h2>*** Наши "заебись" фичи:</h2>
+                <ul>
+                    <li>[X] <strong>Хуёвое управление</strong> - специально разработано, чтобы ты сломал клавиатуру</li>
+                    <li>[X] <strong>Вылетает когда хочет</strong> - сюрпризы на каждом шагу!</li>
+                    <li>[X] <strong>Непонятный интерфейс</strong> - разберется только ясновидящий</li>
+                    <li>[X] <strong>Сохраняет через жопу</strong> - иногда файлы просто исчезают</li>
+                    <li>[X] <strong>Тормозит как в говне</strong> - идеально для развития терпения</li>
+                </ul>
+            </div>
+            
+            <div class="feature">
+                <h2>>> Как установить эту дичь:</h2>
+                <ol>
+                    <li>Скачай файл (надеемся, он не сломает твой комп)</li>
+                    <li>Запусти установку (помолись перед этим)</li>
+                    <li>Когда все зависнет - не паникуй, это нормально</li>
+                    <li>Готово! Теперь можно материться в свое удовольствие!</li>
+                </ol>
+            </div>
+            
+            <div style="text-align: center; margin: 20px 0;">
+                <button class="button" onclick="downloadFile()">
+                    [СКАЧАТЬ] ЭТУ ХРЕНЬ (2.4 MB)
+                </button>
+                
+                <button class="button" onclick="showJoke()">
+                    [ЮМОР] РАССМЕШИ МЕНЯ
+                </button>
+                
+                <button class="button" onclick="complain()">
+                    [ЖАЛОБА] ПОЖАЛОВАТЬСЯ
+                </button>
+            </div>
+            
+            <div id="jokeBox" style="display:none; background:#ffffcc; padding:12px; margin:12px 0; border:2px dotted #ff0000; font-family: Arial, sans-serif;">
+                <span id="jokeText"></span>
+            </div>
+            
+            <div class="under-construction blink">
+                !!! САЙТ В РАЗРАБОТКЕ! МОГУТ БЫТЬ БАГИ И МАТЫ! !!!
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px; font-size: 12px; font-family: Arial, sans-serif;">
+                (c) 2001 Easy Movie Corp. | "Нахуй не нужно, но пусть будет" | 
+                <span style="color: red; font-weight: bold;">Версия: 0.1b (очень бета)</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let visitorCount = 1337;
+        let jokes = [
+            "Почему Easy Movie как русские дороги? Потому что ямы везде!",
+            "Наш видеоредактор и женщина имеют много общего: непредсказуемы и часто зависают!",
+            "Easy Movie - единственная программа, где кнопка 'Сохранить' работает как лотерея!",
+            "Мы не баги фиксим, мы добавляем новые особенности!",
+            "Эта программа развивает твое терпение... или отправляет в психушку!",
+            "Наш девиз: 'Работает? Не трогай!'",
+            "Easy Movie: делаем из видеомонтажеров буддистских монахов!"
+        ];
+        
+        function downloadFile() {
+            alert("ЁБАНЫЙ ВРОТ! Файл 'easy_movie_virus.exe' начал загрузку!\n\nНе забудь выключить антивирус - он мешает нашим 'особенностям'!");
+            visitorCount--;
+            document.getElementById('visitorCount').textContent = visitorCount;
+        }
+        
+        function showJoke() {
+            const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+            document.getElementById('jokeText').textContent = randomJoke;
+            document.getElementById('jokeBox').style.display = 'block';
+            
+            if (Math.random() > 0.7) {
+                alert("БАЦ! Шутка удалась! А программа все равно хуёвая!");
+            }
+        }
+        
+        function complain() {
+            const complaints = [
+                "Мы знаем, что это говно. Терпи!",
+                "А ты попробуй переустановить! (шутка)",
+                "Это не баг, это фича!",
+                "У нас все хуёво и это нормально!",
+                "Спасибо за отзыв! Мы его проигнорируем!"
+            ];
+            
+            const randomComplaint = complaints[Math.floor(Math.random() * complaints.length)];
+            alert(randomComplaint);
+        }
+        
+        setInterval(() => {
+            if (Math.random() > 0.8) {
+                document.body.style.backgroundColor = 
+                    ['#ff0000', '#00ff00', '#0000ff'][Math.floor(Math.random() * 3)];
+                setTimeout(() => {
+                    document.body.style.backgroundColor = '#008080';
+                }, 100);
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
