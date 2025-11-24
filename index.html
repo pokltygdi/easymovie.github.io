@@ -173,7 +173,244 @@
             <div id="jokeBox" style="display:none; background:#ffffcc; padding:12px; margin:12px 0; border:2px dotted #ff0000; font-family: Arial, sans-serif;">
                 <span id="jokeText"></span>
             </div>
+            <div class="rss-films-window" style="
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 600px;
+    background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+    border: 3px solid #ff3300;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(255,51,0,0.5);
+    z-index: 10000;
+    font-family: Arial, sans-serif;
+    color: white;
+    display: none;
+    overflow: hidden;
+">
+    <div class="window-header" style="
+        background: #ff3300;
+        padding: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 2px solid #cc2900;
+    ">
+        <span style="font-weight: bold; font-size: 18px;">🎬 КИНОАФИША EASY MOVIE</span>
+        <button onclick="closeFilmWindow()" style="
+            background: #cc2900;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        ">X</button>
+    </div>
+    
+    <div class="window-content" style="
+        padding: 15px;
+        height: calc(100% - 50px);
+        overflow-y: auto;
+    ">
+        <div class="search-box" style="
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+        ">
+            <input type="text" id="filmSearch" placeholder="Поиск фильмов..." style="
+                flex: 1;
+                padding: 8px;
+                background: #333;
+                border: 1px solid #555;
+                color: white;
+                border-radius: 4px;
+            ">
+            <button onclick="searchFilms()" style="
+                background: #ff6600;
+                border: none;
+                color: white;
+                padding: 8px 15px;
+                cursor: pointer;
+                border-radius: 4px;
+                font-weight: bold;
+            ">НАЙТИ</button>
+        </div>
+        
+        <div id="filmsContainer" style="
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+        ">
+            <!-- Фильмы будут загружаться с RSS -->
+        </div>
+        
+        <div class="loading" id="filmsLoading" style="
+            text-align: center;
+            padding: 20px;
+            color: #ffcc00;
+        ">
+            Загрузка фильмов с RSS...
+        </div>
+    </div>
+</div>
+
+<script>
+let filmsWindow = document.querySelector('.rss-films-window');
+
+function openFilmsWindow() {
+    filmsWindow.style.display = 'block';
+    loadFilmsFromRSS();
+}
+
+function closeFilmWindow() {
+    filmsWindow.style.display = 'none';
+}
+
+function loadFilmsFromRSS() {
+    const loading = document.getElementById('filmsLoading');
+    const container = document.getElementById('filmsContainer');
+    
+    loading.style.display = 'block';
+    container.innerHTML = '';
+    
+    // Парсим RSS ленту
+    const rssUrl = 'https://all-rss.ru/cat-102-kino/feed-316-filmi-besplatno-onlayn/';
+    
+    // Используем CORS proxy для обхода ограничений
+    const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+    
+    fetch(proxyUrl + rssUrl)
+        .then(response => response.text())
+        .then(data => {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(data, "text/xml");
+            const items = xmlDoc.getElementsByTagName('item');
             
+            for (let i = 0; i < Math.min(items.length, 20); i++) {
+                const item = items[i];
+                const title = item.getElementsByTagName('title')[0]?.textContent || 'Без названия';
+                const description = item.getElementsByTagName('description')[0]?.textContent || '';
+                const link = item.getElementsByTagName('link')[0]?.textContent || '#';
+                
+                // Извлекаем картинку из описания
+                let imageUrl = '';
+                const imgMatch = description.match(/<img[^>]+src="([^">]+)"/);
+                if (imgMatch) {
+                    imageUrl = imgMatch[1];
+                }
+                
+                const filmItem = document.createElement('div');
+                filmItem.className = 'film-item';
+                filmItem.innerHTML = `
+                    <div class="film-poster" style="
+                        width: 100%;
+                        height: 200px;
+                        background: #444;
+                        margin-bottom: 8px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: #888;
+                        font-size: 12px;
+                        overflow: hidden;
+                    ">
+                        ${imageUrl ? 
+                            `<img src="${imageUrl}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentNode.innerHTML='🎬';" alt="${title}">` : 
+                            ''
+                        }
+                    </div>
+                    <div class="film-title" style="
+                        color: #ffcc00;
+                        font-weight: bold;
+                        margin-bottom: 5px;
+                        font-size: 14px;
+                        height: 40px;
+                        overflow: hidden;
+                    ">${title}</div>
+                    <button class="watch-btn" onclick="watchFilm('${title.replace(/'/g, "\\'")}', '${link}')" style="
+                        background: #ff3300;
+                        color: white;
+                        border: none;
+                        padding: 5px 10px;
+                        cursor: pointer;
+                        border-radius: 3px;
+                        font-size: 12px;
+                        width: 100%;
+                    ">СМОТРЕТЬ</button>
+                `;
+                container.appendChild(filmItem);
+            }
+            
+            loading.style.display = 'none';
+        })
+        .catch(error => {
+            console.error('Ошибка загрузки RSS:', error);
+            loading.innerHTML = 'Ошибка загрузки фильмов. Проверьте подключение к интернету.';
+            
+            // Запасной вариант - показываем тестовые фильмы
+            const backupFilms = [
+                'Терминатор: Темные судьбы',
+                'Форсаж 9',
+                'Черная Вдова', 
+                'Дюна',
+                'Вечные'
+            ];
+            
+            backupFilms.forEach(film => {
+                const filmItem = document.createElement('div');
+                filmItem.className = 'film-item';
+                filmItem.innerHTML = `
+                    <div class="film-poster"></div>
+                    <div class="film-title">${film}</div>
+                    <button class="watch-btn" onclick="watchFilm('${film}')">СМОТРЕТЬ</button>
+                `;
+                container.appendChild(filmItem);
+            });
+            
+            loading.style.display = 'none';
+        });
+}
+
+function searchFilms() {
+    const searchTerm = document.getElementById('filmSearch').value.toLowerCase();
+    const films = document.querySelectorAll('.film-item');
+    
+    films.forEach(film => {
+        const title = film.querySelector('.film-title').textContent.toLowerCase();
+        film.style.display = title.includes(searchTerm) ? 'block' : 'none';
+    });
+}
+
+function watchFilm(filmName, filmLink) {
+    if (filmLink && filmLink !== '#') {
+        // Открываем в новом окне
+        window.open(filmLink, '_blank');
+    } else {
+        alert(`Запускаем: "${filmName}"\n\n(Ссылка на фильм не найдена)`);
+    }
+}
+
+// Добавляем кнопку открытия афиши в основной интерфейс
+const openBtn = document.createElement('button');
+openBtn.textContent = '🎬 ОТКРЫТЬ КИНОАФИШУ';
+openBtn.style.cssText = `
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #ff3300;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+    z-index: 9999;
+`;
+openBtn.onclick = openFilmsWindow;
+document.body.appendChild(openBtn);
+</script>
             <div class="under-construction blink">
                 !!! САЙТ В РАЗРАБОТКЕ! МОГУТ БЫТЬ БАГИ И МАТЫ! !!!
             </div>
@@ -244,5 +481,6 @@
     </script>
 </body>
 </html>
+
 
 
